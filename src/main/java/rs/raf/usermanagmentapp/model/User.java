@@ -1,11 +1,15 @@
 package rs.raf.usermanagmentapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytebuddy.implementation.bind.annotation.Empty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +33,22 @@ public class User {
     @Column(nullable=false)
     private String password;
 
-    @Column
-    private String permissions;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "USERS_ROLES",
+            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "roleId")
+    )
+    @JsonIgnore
+    private List<Role> roles = new ArrayList<>();
+
+    public void addRole(Role role){
+        roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role){
+        roles.remove(role);
+        role.getUsers().remove(this);
+    }
 }

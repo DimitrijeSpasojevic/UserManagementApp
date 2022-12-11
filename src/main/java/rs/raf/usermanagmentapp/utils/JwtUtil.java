@@ -5,9 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import rs.raf.usermanagmentapp.model.Role;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -26,9 +28,9 @@ public class JwtUtil {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    public String generateToken(String username, String permissions){
+    public String generateToken(String username, List<Role> roles){
         Map<String, Object> claims = new HashMap<>();
-        claims.put("permissions",permissions.split(","));
+        claims.put("roles",roles);
 
         return Jwts.builder()
                 .setClaims(claims)

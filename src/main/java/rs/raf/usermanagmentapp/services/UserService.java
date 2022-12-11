@@ -1,15 +1,13 @@
 package rs.raf.usermanagmentapp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.raf.usermanagmentapp.model.User;
 import rs.raf.usermanagmentapp.repositories.UserRepository;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +28,7 @@ public class UserService implements IService<User,Long>, UserDetailsService {
             throw new UsernameNotFoundException("User name "+username+" not found");
         }
 
-        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), myUser.getPassword(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), myUser.getPassword(), myUser.getRoles());
     }
 
     @Override
@@ -49,8 +47,8 @@ public class UserService implements IService<User,Long>, UserDetailsService {
     }
 
     @Override
-    public void deleteById(Long var1) {
-
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 
     public User findByUserName(String username) {
