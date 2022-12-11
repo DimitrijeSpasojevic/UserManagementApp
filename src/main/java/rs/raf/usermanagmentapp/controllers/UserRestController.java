@@ -4,8 +4,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.usermanagmentapp.mappers.CreateUserReqToUser;
+import rs.raf.usermanagmentapp.mappers.UpdateUserReqToUser;
 import rs.raf.usermanagmentapp.model.User;
 import rs.raf.usermanagmentapp.requests.CreateUserRequest;
+import rs.raf.usermanagmentapp.requests.UpdateUserRequest;
 import rs.raf.usermanagmentapp.services.UserService;
 
 import java.util.List;
@@ -17,10 +19,12 @@ public class UserRestController {
 
     private final UserService userService;
     private final CreateUserReqToUser mapper;
+    private final UpdateUserReqToUser mapperUpdate;
 
-    public UserRestController(UserService userService, CreateUserReqToUser mapper) {
+    public UserRestController(UserService userService, CreateUserReqToUser mapper, UpdateUserReqToUser mapperUpdate) {
         this.userService = userService;
         this.mapper = mapper;
+        this.mapperUpdate = mapperUpdate;
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,10 +43,10 @@ public class UserRestController {
         return ResponseEntity.ok().build();
     }
 
-//    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public User updateUser(@RequestBody CreateUserRequest request){
-//        return userService.save(teacher);
-//    }
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User updateUser(@RequestBody UpdateUserRequest request){
+        return userService.save(mapperUpdate.mapReqToUser(request));
+    }
 
 
 }
