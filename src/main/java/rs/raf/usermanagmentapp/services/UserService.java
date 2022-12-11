@@ -1,6 +1,11 @@
 package rs.raf.usermanagmentapp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.raf.usermanagmentapp.model.User;
 import rs.raf.usermanagmentapp.repositories.UserRepository;
@@ -9,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements IService<User,Long> {
+public class UserService implements IService<User,Long>, UserDetailsService {
 
     private UserRepository userRepository;
 
@@ -18,6 +23,15 @@ public class UserService implements IService<User,Long> {
         this.userRepository = userRepository;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User myUser = this.userRepository.findByUsername(username);
+        if(myUser == null) {
+            throw new UsernameNotFoundException("User name "+username+" not found");
+        }
+
+        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), myUser.getPassword(), new ArrayList<>());
+    }
 
     @Override
     public <S extends User> S save(S user) {
@@ -37,5 +51,9 @@ public class UserService implements IService<User,Long> {
     @Override
     public void deleteById(Long var1) {
 
+    }
+
+    public User findByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 }
