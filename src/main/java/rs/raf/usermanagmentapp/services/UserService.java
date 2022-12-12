@@ -1,13 +1,16 @@
 package rs.raf.usermanagmentapp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import rs.raf.usermanagmentapp.model.Role;
 import rs.raf.usermanagmentapp.model.User;
 import rs.raf.usermanagmentapp.repositories.UserRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

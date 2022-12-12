@@ -24,13 +24,7 @@ public class Role implements GrantedAuthority {
     @Column(unique = true, nullable=false)
     private String role;
 
-    @ManyToMany
-    @JoinTable(
-            name = "USERS_ROLES",
-            joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "roleId"),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "userId")
-    )
-
+    @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>();
 
     @Override
