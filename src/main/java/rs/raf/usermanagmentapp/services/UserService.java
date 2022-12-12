@@ -45,8 +45,8 @@ public class UserService implements IService<User,Long>, UserDetailsService {
     }
 
     @Override
-    public Optional<User> findById(Long var1) {
-        return Optional.empty();
+    public User findById(Long var1) {
+        return userRepository.findByUserId(var1);
     }
 
     @Override
