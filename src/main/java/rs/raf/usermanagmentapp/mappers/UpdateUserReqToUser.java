@@ -34,7 +34,6 @@ public class UpdateUserReqToUser {
         user.setLastName(request.getLastName());
         user.setFirstName(request.getFirstName());
         user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         for (int i = 0; i < request.getRoles().size(); i++) {
             Role role = roleRepository.findByRole(request.getRoles().get(i));

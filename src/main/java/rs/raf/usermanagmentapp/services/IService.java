@@ -9,8 +9,6 @@ public interface IService<T, ID> {
 
     T findById(ID var1);
 
-    List<T> findAll();
-
     void deleteById(ID var1);
 
 }

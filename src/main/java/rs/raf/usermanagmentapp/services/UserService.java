@@ -1,27 +1,28 @@
 package rs.raf.usermanagmentapp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import rs.raf.usermanagmentapp.model.Role;
+import rs.raf.usermanagmentapp.dtos.UserDtoWithRoles;
+import rs.raf.usermanagmentapp.mappers.UserMapper;
 import rs.raf.usermanagmentapp.model.User;
 import rs.raf.usermanagmentapp.repositories.UserRepository;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService implements IService<User,Long>, UserDetailsService {
 
     private UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -39,9 +40,13 @@ public class UserService implements IService<User,Long>, UserDetailsService {
         return userRepository.save(user);
     }
 
-    @Override
-    public List<User> findAll() {
-        return (List<User>) userRepository.findAll();
+    public List<UserDtoWithRoles> findAll() {
+        List<UserDtoWithRoles> usersDtoWithRoles = new ArrayList<>();
+        List<User> usersFromDb = userRepository.findAll();
+        for (User u : usersFromDb){
+            usersDtoWithRoles.add(userMapper.mapUserToUserDtoWithRoles(u));
+        }
+        return (List<UserDtoWithRoles>) usersDtoWithRoles;
     }
 
     @Override

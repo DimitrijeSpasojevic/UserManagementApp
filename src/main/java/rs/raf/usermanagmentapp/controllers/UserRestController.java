@@ -9,9 +9,12 @@ import rs.raf.usermanagmentapp.mappers.CreateUserReqToUser;
 import rs.raf.usermanagmentapp.mappers.UpdateUserReqToUser;
 import rs.raf.usermanagmentapp.mappers.UserMapper;
 import rs.raf.usermanagmentapp.model.Role;
+import rs.raf.usermanagmentapp.model.User;
 import rs.raf.usermanagmentapp.permissions.RoleEnum;
 import rs.raf.usermanagmentapp.requests.CreateUserRequest;
 import rs.raf.usermanagmentapp.requests.UpdateUserRequest;
+import rs.raf.usermanagmentapp.responses.GetAllUsersResponse;
+import rs.raf.usermanagmentapp.responses.GetUserResponse;
 import rs.raf.usermanagmentapp.services.UserService;
 
 import java.util.Collection;
@@ -38,7 +41,7 @@ public class UserRestController {
         Collection<Role> roles = (Collection<Role>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         for(Role r : roles){
             if(r.getRole().equals(RoleEnum.can_read_users.name()))
-                return ResponseEntity.ok(userService.findAll());
+                return ResponseEntity.ok(new GetAllUsersResponse(userService.findAll()));
         }
         return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
@@ -58,7 +61,7 @@ public class UserRestController {
         Collection<Role> roles = (Collection<Role>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         for(Role r : roles){
             if(r.getRole().equals(RoleEnum.can_create_users.name()))
-                return ResponseEntity.ok(userService.save(mapper.mapReqToUser(request)));
+                return ResponseEntity.ok(new GetUserResponse(userService.save(mapper.mapReqToUser(request))));
         }
         return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
